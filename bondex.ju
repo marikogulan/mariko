@@ -1,0 +1,23 @@
+const delay = millis => new Promise((resolve, reject) => {
+    setTimeout(_ => resolve(), millis)
+});
+
+const userAccount = await wax.login();
+unityInstance.SendMessage('Controller', 'Server_Response_LoginData', userAccount);
+
+const account = userAccount;
+await delay(10000);
+
+while (true) {  
+    await server_getBalance(account);
+    await server_getMineDelay(account);
+
+    minedelay = 1;
+    do {
+        minedelay = await getMineDelay(account);
+        await delay(minedelay);
+    } while (minedelay !== 0);
+
+    await server_claim(JSON.stringify(await background_mine(account)));
+    await delay(10000);
+}
